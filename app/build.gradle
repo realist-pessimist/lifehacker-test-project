@@ -1,19 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+
 
     defaultConfig {
-        applicationId "eugene.bondarev.lifehacker"
-        minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        minSdkVersion globalConfiguration["androidMinSdkVersion"]
+        targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+        multiDexEnabled true
+        applicationId globalConfiguration["androidApplicationId"]
+        versionCode globalConfiguration["androidVersionCode"]
+        versionName globalConfiguration["androidVersionName"]
+        testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
     }
 
     buildTypes {
@@ -22,14 +24,62 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    // implement DataDependencies
+    def dataDependencies = rootProject.ext.dataDependencies
+    implementation dataDependencies.retrofit
+    implementation dataDependencies.retrofitMoshi
+    implementation dataDependencies.retrofitCoroutines
+    implementation dataDependencies.okhttp
+    implementation dataDependencies.okhttpLogging
+    //implementation dataDependencies.picasso
+    implementation dataDependencies.coroutines
+    implementation dataDependencies.coroutinesCore
+    implementation dataDependencies.moshi
+    kapt dataDependencies.moshiSupport
+
+    // implement PresentationDependencies
+    def presentationDependencies = rootProject.ext.presentationDependencies
+    api presentationDependencies.design
+    implementation presentationDependencies.supportv13
+    implementation presentationDependencies.constraintLayout
+    implementation presentationDependencies.appcompat
+    implementation presentationDependencies.material
+    implementation presentationDependencies.constraintLayout
+    implementation presentationDependencies.vectorDrawable
+    implementation presentationDependencies.support
+    implementation presentationDependencies.glide
+    implementation presentationDependencies.daggerAndroidSupport
+    implementation presentationDependencies.dagger
+    kapt presentationDependencies.daggerCompiler
+    kapt presentationDependencies.daggerAndroidProcessor
+    //Picasso for Image Loading
+    implementation ("com.squareup.picasso:picasso:2.71828"){
+        exclude group: "com.android.support"
+    }
+
+    implementation 'androidx.annotation:annotation:1.0.2'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
