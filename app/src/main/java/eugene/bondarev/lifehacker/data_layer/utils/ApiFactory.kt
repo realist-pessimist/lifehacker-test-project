@@ -10,7 +10,7 @@ object ApiFactory{
 
     private fun retrofit() : Retrofit = Retrofit.Builder()
         .client(OkHttpClient().newBuilder().build())
-        .baseUrl("https://lifehacker.ru/api/wp/v2/")
+        .baseUrl("https://lifehacker.ru/")
         .addConverterFactory(MoshiConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()

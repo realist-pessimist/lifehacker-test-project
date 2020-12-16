@@ -7,9 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface PlaceholderApi{
-    @GET("/posts")
-    fun getPosts() : Deferred<Response<List<PostParcelable>>>
+    @GET("api/wp/v2/posts")
+    fun getPostsAsync() : Deferred<Response<List<PostParcelable>>>
 
-    @GET("/posts/{id}")
+    @GET("api/wp/v2/posts/{id}")
     fun getPost(@Path("id") id: Int) : Deferred<Response<List<PostParcelable>>>
 }
