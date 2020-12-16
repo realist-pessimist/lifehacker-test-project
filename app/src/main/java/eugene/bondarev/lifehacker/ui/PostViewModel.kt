@@ -25,6 +25,7 @@ class PostViewModel: ViewModel() {
 
     private val repository : PostRepository = PostRepository()
     val postList = MutableLiveData<List<PostParcelable>>()
+    val receivedPost = MutableLiveData<PostParcelable>()
 
     fun fetchPosts(): MutableLiveData<List<PostParcelable>> {
 
@@ -36,6 +37,15 @@ class PostViewModel: ViewModel() {
         return postList
     }
 
+
+    fun fetchPostById(id: Long?): MutableLiveData<PostParcelable> {
+
+        scope.launch {
+            val post = repository.getPost(id)
+            receivedPost.postValue(post)
+        }
+        return receivedPost
+    }
 
     fun cancelAllRequests() = coroutineContext.cancel()
 

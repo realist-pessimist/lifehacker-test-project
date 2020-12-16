@@ -4,18 +4,16 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import eugene.bondarev.lifehacker.R
-import eugene.bondarev.lifehacker.data_layer.dto.PostParcelable
 import eugene.bondarev.lifehacker.ui.PostViewModel
 import eugene.bondarev.lifehacker.ui.post.PostActivity
 import kotlinx.android.synthetic.main.activity_post_list.*
-import javax.inject.Inject
 
-class PostListActivity : AppCompatActivity() {
+
+class PostListActivity : AppCompatActivity(), PostListRecyclerAdapter.AdapterCallback {
     companion object {
         const val TAG = "PostListActivity"
 
@@ -25,23 +23,37 @@ class PostListActivity : AppCompatActivity() {
     }
 
     private var mPostListRecyclerAdapter = PostListRecyclerAdapter()
-
     private lateinit var postViewModel: PostViewModel
+    private var mInitialized: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_list)
+        if (savedInstanceState == null) {
+            init()
+        }
+    }
 
-        postsRecyclerView.adapter = mPostListRecyclerAdapter
-        postsRecyclerView.layoutManager = LinearLayoutManager(this)
+    private fun init(){
+        if (!mInitialized) {
+            postsRecyclerView.adapter = mPostListRecyclerAdapter
+            postsRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        postViewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
+            postViewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
 
-        mPostListRecyclerAdapter.clearWithoutNotify()
-        postViewModel.fetchPosts()
+            mPostListRecyclerAdapter.clearWithoutNotify()
+            postViewModel.fetchPosts()
 
-        postViewModel.postList.observe(this, Observer {
-            mPostListRecyclerAdapter.addAll(it)
-        })
+            postViewModel.postList.observe(this, Observer {
+                mPostListRecyclerAdapter.addAll(it)
+            })
+
+            mInitialized = true
+        }
+    }
+
+    override fun onMethodCallback(postId: Long) {
+        val intent = PostActivity.getPostIntent(this)
+        startActivity(intent.putExtra("postId", postId))
     }
 }

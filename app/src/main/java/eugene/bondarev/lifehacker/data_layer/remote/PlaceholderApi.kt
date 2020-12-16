@@ -11,5 +11,5 @@ interface PlaceholderApi{
     fun getPostsAsync() : Deferred<Response<List<PostParcelable>>>
 
     @GET("api/wp/v2/posts/{id}")
-    fun getPost(@Path("id") id: Int) : Deferred<Response<List<PostParcelable>>>
+    fun getPostAsync(@Path("id") id: Long?) : Deferred<Response<PostParcelable>>
 }
