@@ -32,10 +32,15 @@ class PostListRecyclerAdapter @Inject constructor()
 
     inner class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindProduct(postParcelable: PostParcelable){
-            Glide.with(itemView)
-                .load(postParcelable.cat_cover.sizes.mobile)
-                .into(itemView.postImage)
-            itemView.postTitle
+
+            val responseImage: String? = postParcelable.cat_cover.sizes.mobile
+            //TODO()
+            responseImage.let {
+                Glide.with(itemView)
+                    .load(it)
+                    .into(itemView.postImage)
+            }
+            itemView.postTitle.text = postParcelable.title.rendered
         }
     }
 }

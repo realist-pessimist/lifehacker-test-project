@@ -2,7 +2,6 @@ package eugene.bondarev.lifehacker.base;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,6 +128,7 @@ public abstract class BaseRecyclerAdapter<T extends RecyclerView.ViewHolder, O> 
     public int getItemCount() {
         return mCollection.size();
     }
+
 
     public interface RecyclerEndListener {
         void onRecyclerEnd(int nextPage);
