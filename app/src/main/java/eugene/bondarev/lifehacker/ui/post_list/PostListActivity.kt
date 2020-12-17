@@ -22,35 +22,27 @@ class PostListActivity : AppCompatActivity(), PostListRecyclerAdapter.AdapterCal
         }
     }
 
-    private var mPostListRecyclerAdapter = PostListRecyclerAdapter()
+    private var mPostListRecyclerAdapter = PostListRecyclerAdapter(this)
     private lateinit var postViewModel: PostViewModel
-    private var mInitialized: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_list)
-        if (savedInstanceState == null) {
-            init()
-        }
+
+        postsRecyclerView.adapter = mPostListRecyclerAdapter
+        postsRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        postViewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
+
+        mPostListRecyclerAdapter.clearWithoutNotify()
+        postViewModel.fetchPosts()
+
+        postViewModel.postList.observe(this, Observer {
+            mPostListRecyclerAdapter.addAll(it)
+        })
     }
 
-    private fun init(){
-        if (!mInitialized) {
-            postsRecyclerView.adapter = mPostListRecyclerAdapter
-            postsRecyclerView.layoutManager = LinearLayoutManager(this)
-
-            postViewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
-
-            mPostListRecyclerAdapter.clearWithoutNotify()
-            postViewModel.fetchPosts()
-
-            postViewModel.postList.observe(this, Observer {
-                mPostListRecyclerAdapter.addAll(it)
-            })
-
-            mInitialized = true
-        }
-    }
 
     override fun onMethodCallback(postId: Long) {
         val intent = PostActivity.getPostIntent(this)

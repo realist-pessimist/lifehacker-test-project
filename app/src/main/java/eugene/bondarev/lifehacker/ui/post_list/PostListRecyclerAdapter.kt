@@ -2,6 +2,8 @@ package eugene.bondarev.lifehacker.ui.post_list
 
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +16,12 @@ import kotlinx.android.synthetic.main.post_item.view.*
 import javax.inject.Inject
 
 
-class PostListRecyclerAdapter @Inject constructor()
+class PostListRecyclerAdapter @Inject constructor(val mAdapterCallback: AdapterCallback)
     : BaseRecyclerAdapter<PostListRecyclerAdapter.PostHolder, PostParcelable>() {
 
-
-    private var mAdapterCallback: AdapterCallback? = null
+    companion object {
+        const val TAG = "PostListRecyclerAdapter"
+    }
 
     interface AdapterCallback {
         fun onMethodCallback(postId: Long)
@@ -30,7 +33,12 @@ class PostListRecyclerAdapter @Inject constructor()
 
     override fun onBindViewHolder(holder: PostHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        holder.bindProduct(get(position))
+        holder.bindPost(get(position))
+
+        holder.itemView.setOnClickListener {
+            mAdapterCallback.onMethodCallback(getItemId(position))
+        }
+
     }
 
     override fun getItemId(position: Int): Long {
@@ -39,19 +47,20 @@ class PostListRecyclerAdapter @Inject constructor()
 
 
     inner class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun bindProduct(postParcelable: PostParcelable){
-
+        fun bindPost(postParcelable: PostParcelable){
             val responseImage: String? = postParcelable.cat_cover.sizes.mobile
-            responseImage.let {
+
+            Log.d(TAG, "responseImage = $responseImage")
+
+            if (responseImage == null) {
+                itemView.postImage.setImageResource(R.drawable.default_image_post_foreground)
+            }
+            else {
                 Glide.with(itemView)
-                    .load(it)
+                    .load(responseImage)
                     .into(itemView.postImage)
             }
             itemView.postTitle.text = postParcelable.title.rendered
-
-            itemView.setOnClickListener {
-                mAdapterCallback!!.onMethodCallback(postParcelable.id.toLong())
-            }
         }
     }
 }
