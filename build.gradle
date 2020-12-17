@@ -6,9 +6,20 @@ buildscript {
         google()
         jcenter()
     }
+
+    configurations.all {
+        resolutionStrategy {
+            // We want version 5.3.2 instead of 5.2.1.
+            force 'net.sf.proguard:proguard-gradle:6.2.0'
+        }
+    }
+
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.2"
+        classpath 'net.sf.proguard:proguard-gradle:6.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

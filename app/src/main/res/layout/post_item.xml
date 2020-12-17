@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/postImage"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -14,16 +14,19 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/default_image_post_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/default_image_post_foreground" />
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/colorPrimary"/>
 
 
     <TextView
         android:id="@+id/postTitle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:textColor="@color/colorBlack"
         android:gravity="start"
         android:textSize="17sp"
         android:layout_weight="20"
