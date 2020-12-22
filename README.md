@@ -19,5 +19,6 @@
 * Для более чистой обработки ответа сервера можно реализовать библиотеку *Jackson for Kotlin*, которая позволяет десериализовать JSON-ответ [Jackson Library](https://www.baeldung.com/jackson-kotlin)
 * В связи с тем, что оснавная функция приложения - просмотр постов полученных от сервера, стоит реализовать кэширование данных, сохраняя их в локальную базу данных ([Room](https://developer.android.com/topic/libraries/architecture/room), [SQLite](https://developer.android.com/training/data-storage/sqlite))
 * Тестирование, с возвожным изменением сетевых запросов *Coroutines* для ускорения и оптимизации получения данных
+* Переход от Multi-Activity к подходу Single-Activity
 * При увеличении функционала, проект можно разделить на модули, вынесев модуль `base` и `data` в отдельные библиотеки
 * Замена *Dagger* на *Koin* в качестве библиотеки DI
